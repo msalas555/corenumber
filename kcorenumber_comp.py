@@ -76,6 +76,7 @@ def price():
             ticker = requests.get("http://api.kraken.com/0/public/Ticker?pair=BTCUSDC").json()
             ask = ticker['result']['XBTUSDC']['a']
             bid = ticker['result']['XBTUSDC']['b']
+            last = ticker['result']['XBTUSDC']['c']
             return {'ask':ask, 'bid': bid}
         except requests.ConnectionError:
             print(f'connection error. retrying in {retrytime} minutes')
@@ -141,9 +142,10 @@ def main():
         current = price()
         ask_price = float(current['ask'][0])
         bid_price = float(current['bid'][0])
-
+        p = current['last'][0]
+        
         ask_convert = ask_price * btc_bal
-        bid_convert = bid_convert * btc_bal
+        bid_convert = bid_price * btc_bal
 
         print(f"price:{p}  BTC:{btc_bal}  $value:{round(bid_convert,2)}  USDC:{round(usdc_bal,2)} total:{round(bid_convert+usdc_bal,2)}")
 
