@@ -151,7 +151,7 @@ def main():
 
     #check for bids price instead
         if bid_convert >= ((trigerpercent * corenumber) +corenumber):
-            sell_amt = round((bid_convert - corenumber)/p,8)
+            sell_amt = round((bid_convert - corenumber)/bid_price,8)
             print(f"selling {sell_amt}btc {time_stamp()}")
             resp = sell(sell_amt,api_key,api_sec).json()
             if not resp['error']:
@@ -165,7 +165,7 @@ def main():
         elif ask_convert <= (corenumber - (trigerpercent * corenumber)):
             corenumber = compound(corenumber,usdc_bal)
 
-            buy_amt = round((corenumber - ask_convert)/p,8)
+            buy_amt = round((corenumber - ask_convert)/ask_price,8)
             print(f"buying {buy_amt}btc  {time_stamp()}")
             resp = buy(buy_amt,api_key,api_sec).json()
             if not resp['error']:
