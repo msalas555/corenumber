@@ -77,7 +77,7 @@ def price():
             ask = ticker['result']['XBTUSDC']['a']
             bid = ticker['result']['XBTUSDC']['b']
             last = ticker['result']['XBTUSDC']['c']
-            return {'ask':ask, 'bid': bid}
+            return {'ask': ask, 'bid': bid, 'last': last}
         except requests.ConnectionError:
             print(f'connection error. retrying in {retrytime} minutes')
             time.sleep(retrytime * 60)
