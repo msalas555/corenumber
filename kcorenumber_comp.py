@@ -89,7 +89,8 @@ def get_balance(api_key,api_sec):
 
 
     usdc_bal = float(resp.json()['result']['USDC'])
-    btc_bal = float(resp.json()['result']['XXBT'])
+    btc_bal = float(resp.json()['result']['XBT.F'])
+    #btc_bal = float(resp.json()['result']['XXBT'])
 
     return usdc_bal,btc_bal
 
@@ -129,11 +130,15 @@ def main():
         with open('core.txt','w') as f:
             f.write(str(corenumber))
 
-    trigerpercent = 3/100
+    trigerpercent = 5/100
+    down_triger_per = 7/100
 
     wait_time = 600
 
-    print(f"core number:{corenumber},buy/sell%:{trigerpercent},$trigger:{round(trigerpercent * corenumber,2)}")
+    print(f"core number:{corenumber}")
+    print(f"buy%:{down_triger_per}" )
+    print(f"sell%:{trigerpercent}")
+    print(f"$trigger:{round(trigerpercent * corenumber,2)}")
     print("checking every {} mins".format(wait_time/60))
 
     passcount = 0
@@ -149,7 +154,7 @@ def main():
 
         print(f"price:{p}  BTC:{btc_bal}  $value:{round(bid_convert,2)}  USDC:{round(usdc_bal,2)} total:{round(bid_convert+usdc_bal,2)}")
 
-    #check for bids price instead
+    #check for bids price to buy
         if bid_convert >= ((trigerpercent * corenumber) +corenumber):
             sell_amt = round((bid_convert - corenumber)/bid_price,8)
             print(f"selling {sell_amt}btc {time_stamp()}")
@@ -161,8 +166,8 @@ def main():
                 log(resp['error'])
                 print(resp['error'])
             usdc_bal,btc_bal = get_balance(api_key,api_sec)
-    #check for asks price instead
-        elif ask_convert <= (corenumber - (trigerpercent * corenumber)):
+    #check for ask price to sell
+        elif ask_convert <= (corenumber - (down_triger_per * corenumber)):
             corenumber = compound(corenumber,usdc_bal)
 
             buy_amt = round((corenumber - ask_convert)/ask_price,8)
@@ -176,7 +181,7 @@ def main():
                 print(resp['error'])
             usdc_bal,btc_bal = get_balance(api_key,api_sec)
         else:
-            print('pass')
+            #print('pass')
             passcount = passcount + 1
 
             if passcount == 6:
